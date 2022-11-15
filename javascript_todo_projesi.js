@@ -1,12 +1,14 @@
 let domForm = document.querySelector("#userForm");
 let domList = document.querySelector("#userList");
 const toastLiveExample = document.getElementById('liveToast')
+const toastMessage = document.getElementById('toastMessage')
+const toastDeleteMessage = document.getElementById('toastDeleteMessage')
 
 domForm.addEventListener("submit", function(e){
     e.preventDefault();
     domInput = document.querySelector("#nameInput");
     items = localStorage.getItem("itemList") ? JSON.parse(localStorage.getItem("itemList")) : [];
-    if (!items.includes(domInput.value) && domInput.value){
+    if (!items.includes(domInput.value) && domInput.value && !domInput.value.includes(" ")){
         items.push(domInput.value);
         localStorage.setItem("itemList", JSON.stringify(items));
         listElement = document.createElement("li");
@@ -16,6 +18,9 @@ domForm.addEventListener("submit", function(e){
         domInput.value = "";
         const toast = new bootstrap.Toast(toastLiveExample)
         toast.show()
+    }else {
+        const newToastMessage = new bootstrap.Toast(toastMessage)
+        newToastMessage.show()
     }
 })
 
@@ -36,6 +41,8 @@ function deleteItemFunction(e) {
             items.splice(items.indexOf(e.target.previousSibling.innerHTML),1)
             localStorage.setItem("itemList", JSON.stringify(items))
             e.target.parentElement.remove()
+            const messageDeleteToast = new bootstrap.Toast(toastDeleteMessage)
+            messageDeleteToast.show()
         }
     })
 }
